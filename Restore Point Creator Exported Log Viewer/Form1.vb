@@ -189,6 +189,7 @@ Public Class Form1
 
         lblCount.Text = "Number of Logs: " & eventLogList.Items.Count
         lblExportVersion.Text = "Data Export Version: " & shortExportDataVersion
+        lblFileSize.Text = "File Size: " & bytesToHumanSize(New IO.FileInfo(strFileName).Length)
 
         timeStamp.Stop()
         lblProcessed.Text = String.Format("Event Log Loaded and Processed in {0}ms ({1} seconds).", timeStamp.ElapsedMilliseconds, Math.Round(timeStamp.Elapsed.TotalSeconds, 3))
