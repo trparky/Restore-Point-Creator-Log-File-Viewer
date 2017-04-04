@@ -47,6 +47,7 @@ Partial Class Form1
         Me.lblOSVersion = New System.Windows.Forms.ToolStripStatusLabel()
         Me.lblExportVersion = New System.Windows.Forms.ToolStripStatusLabel()
         Me.lblLogFileType = New System.Windows.Forms.ToolStripStatusLabel()
+        Me.lblFileSize = New System.Windows.Forms.ToolStripStatusLabel()
         Me.chkProgramClosingAndOpeningEvents = New System.Windows.Forms.CheckBox()
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
         Me.btnRawView = New System.Windows.Forms.Button()
@@ -220,7 +221,7 @@ Partial Class Form1
         '
         'StatusStrip1
         '
-        Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.lblCount, Me.lblDateType, Me.lblProcessed, Me.lblProgramVersion, Me.lblOSVersion, Me.lblExportVersion, Me.lblLogFileType})
+        Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.lblCount, Me.lblDateType, Me.lblProcessed, Me.lblProgramVersion, Me.lblOSVersion, Me.lblExportVersion, Me.lblLogFileType, Me.lblFileSize})
         Me.StatusStrip1.Location = New System.Drawing.Point(0, 402)
         Me.StatusStrip1.Name = "StatusStrip1"
         Me.StatusStrip1.Size = New System.Drawing.Size(854, 22)
@@ -234,39 +235,45 @@ Partial Class Form1
         '
         'lblDateType
         '
-        Me.lblDateType.Margin = New System.Windows.Forms.Padding(40, 3, 0, 2)
+        Me.lblDateType.Margin = New System.Windows.Forms.Padding(30, 3, 0, 2)
         Me.lblDateType.Name = "lblDateType"
         Me.lblDateType.Size = New System.Drawing.Size(0, 17)
         '
         'lblProcessed
         '
-        Me.lblProcessed.Margin = New System.Windows.Forms.Padding(40, 3, 0, 2)
+        Me.lblProcessed.Margin = New System.Windows.Forms.Padding(30, 3, 0, 2)
         Me.lblProcessed.Name = "lblProcessed"
         Me.lblProcessed.Size = New System.Drawing.Size(0, 17)
         '
         'lblProgramVersion
         '
-        Me.lblProgramVersion.Margin = New System.Windows.Forms.Padding(40, 3, 0, 2)
+        Me.lblProgramVersion.Margin = New System.Windows.Forms.Padding(30, 3, 0, 2)
         Me.lblProgramVersion.Name = "lblProgramVersion"
         Me.lblProgramVersion.Size = New System.Drawing.Size(0, 17)
         '
         'lblOSVersion
         '
-        Me.lblOSVersion.Margin = New System.Windows.Forms.Padding(40, 3, 0, 2)
+        Me.lblOSVersion.Margin = New System.Windows.Forms.Padding(30, 3, 0, 2)
         Me.lblOSVersion.Name = "lblOSVersion"
         Me.lblOSVersion.Size = New System.Drawing.Size(0, 17)
         '
         'lblExportVersion
         '
-        Me.lblExportVersion.Margin = New System.Windows.Forms.Padding(40, 3, 0, 2)
+        Me.lblExportVersion.Margin = New System.Windows.Forms.Padding(30, 3, 0, 2)
         Me.lblExportVersion.Name = "lblExportVersion"
         Me.lblExportVersion.Size = New System.Drawing.Size(0, 17)
         '
         'lblLogFileType
         '
-        Me.lblLogFileType.Margin = New System.Windows.Forms.Padding(40, 3, 0, 2)
+        Me.lblLogFileType.Margin = New System.Windows.Forms.Padding(30, 3, 0, 2)
         Me.lblLogFileType.Name = "lblLogFileType"
         Me.lblLogFileType.Size = New System.Drawing.Size(0, 17)
+        '
+        'lblFileSize
+        '
+        Me.lblFileSize.Margin = New System.Windows.Forms.Padding(30, 3, 0, 2)
+        Me.lblFileSize.Name = "lblFileSize"
+        Me.lblFileSize.Size = New System.Drawing.Size(0, 17)
         '
         'chkProgramClosingAndOpeningEvents
         '
@@ -363,4 +370,5 @@ Partial Class Form1
     Friend WithEvents TableLayoutPanel1 As TableLayoutPanel
     Friend WithEvents btnRawView As Button
     Friend WithEvents lblLogFileType As ToolStripStatusLabel
+    Friend WithEvents lblFileSize As ToolStripStatusLabel
 End Class
