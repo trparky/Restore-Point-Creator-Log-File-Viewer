@@ -84,6 +84,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Globals.vb" />
+    <Compile Include="GlobalSuppressions.vb" />
     <Compile Include="ListViewColumnSorter Class.vb" />
     <Compile Include="Module1.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />

@@ -32,14 +32,17 @@ Public Class Form1
 
         Select Case logEntry.logType
             Case Eventing.Reader.StandardEventLevel.Error ' Error
-                listViewItemObject = New eventLogListEntry("Error")
-                listViewItemObject.ImageIndex = 0
+                listViewItemObject = New eventLogListEntry("Error") With {
+                    .ImageIndex = 0
+                }
             Case Eventing.Reader.StandardEventLevel.Informational ' Information
-                listViewItemObject = New eventLogListEntry("Information")
-                listViewItemObject.ImageIndex = 1
+                listViewItemObject = New eventLogListEntry("Information") With {
+                    .ImageIndex = 1
+                }
             Case Eventing.Reader.StandardEventLevel.Warning ' Warning
-                listViewItemObject = New eventLogListEntry("Warning")
-                listViewItemObject.ImageIndex = 2
+                listViewItemObject = New eventLogListEntry("Warning") With {
+                    .ImageIndex = 2
+                }
             Case Else
                 listViewItemObject = New eventLogListEntry("Unknown")
         End Select
@@ -616,9 +619,10 @@ Public Class Form1
     Private Sub btnRawView_Click(sender As Object, e As EventArgs) Handles btnRawView.Click
         If IO.File.Exists(strLoadedFile) Then
             If rawViewInstance Is Nothing Then
-                rawViewInstance = New Raw_View
-                rawViewInstance.Size = My.Settings.rawViewSize
-                rawViewInstance.strFileToLoad = strLoadedFile
+                rawViewInstance = New Raw_View With {
+                    .Size = My.Settings.rawViewSize,
+                    .strFileToLoad = strLoadedFile
+                }
                 rawViewInstance.Show()
                 rawViewInstance.Location = My.Settings.rawViewLocation
             Else
