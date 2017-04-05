@@ -5,6 +5,7 @@ Imports System.Text.RegularExpressions
 Imports Microsoft.Win32
 
 Public Class Form1
+    Private exportedLogFile As exportedLogFile
     Private oldSplitterDifference As Integer
     Private m_SortingColumn As ColumnHeader
     Private boolDoneLoading As Boolean = False
@@ -158,23 +159,24 @@ Public Class Form1
             fileHandle.Close()
             fileHandle.Dispose()
         ElseIf fileInfo.Extension.Equals(".reslogx", StringComparison.OrdinalIgnoreCase) Then
-            lblLogFileType.Text = "Log File Type: XML"
+            If exportedLogFile Is Nothing Then
+                Dim streamReader As New IO.StreamReader(strFileName)
+                exportedLogFile = New exportedLogFile()
+                Dim xmlSerializerObject As New Xml.Serialization.XmlSerializer(exportedLogFile.GetType)
+                exportedLogFile = xmlSerializerObject.Deserialize(streamReader)
+                streamReader.Close()
+                streamReader.Dispose()
 
-            Dim streamReader As New IO.StreamReader(strFileName)
-            Dim exportedLogFile As New exportedLogFile()
-            Dim xmlSerializerObject As New Xml.Serialization.XmlSerializer(exportedLogFile.GetType)
-            exportedLogFile = xmlSerializerObject.Deserialize(streamReader)
-            streamReader.Close()
-            streamReader.Dispose()
+                lblProgramVersion.Text = "Program Version: " & exportedLogFile.programVersion
+                lblProgramVersion.Visible = True
+                lblOSVersion.Text = "Operating System: " & exportedLogFile.operatingSystem
+                lblOSVersion.Visible = True
+                lblLogFileType.Text = "Log File Type: XML"
 
-            lblProgramVersion.Text = "Program Version: " & exportedLogFile.programVersion
-            lblProgramVersion.Visible = True
-            lblOSVersion.Text = "Operating System: " & exportedLogFile.operatingSystem
-            lblOSVersion.Visible = True
+                shortExportDataVersion = exportedLogFile.version
 
-            shortExportDataVersion = exportedLogFile.version
-
-            lblDateType.Text = "Date Type: UNIX Timestamp"
+                lblDateType.Text = "Date Type: UNIX Timestamp"
+            End If
 
             For Each item As restorePointCreatorExportedLog In exportedLogFile.logsEntries
                 If chkProgramClosingAndOpeningEvents.Checked Then
@@ -214,6 +216,7 @@ Public Class Form1
 
         If OpenFileDialog1.ShowDialog = DialogResult.OK Then
             btnRawView.Enabled = True
+            exportedLogFile = Nothing
             openFile(OpenFileDialog1.FileName)
         End If
     End Sub
