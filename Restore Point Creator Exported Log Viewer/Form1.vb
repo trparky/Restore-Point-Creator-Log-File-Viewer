@@ -177,7 +177,13 @@ Public Class Form1
             lblDateType.Text = "Date Type: UNIX Timestamp"
 
             For Each item As restorePointCreatorExportedLog In exportedLogFile.logsEntries
-                itemsToPutInToList.Add(processLogEntry(item, dateType))
+                If chkProgramClosingAndOpeningEvents.Checked Then
+                    itemsToPutInToList.Add(processLogEntry(item, dateType))
+                Else
+                    If Not item.logData.caseInsensitiveContains("started the program") And Not item.logData.caseInsensitiveContains("closed the program") Then
+                        itemsToPutInToList.Add(processLogEntry(item, dateType))
+                    End If
+                End If
             Next
         End If
 
