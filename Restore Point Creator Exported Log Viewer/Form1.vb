@@ -18,6 +18,7 @@ Public Class Form1
     Private Const strSystemRestorePointCreator As String = "System Restore Point Creator"
 
     Private rawSearchTerms As String = Nothing, previousSearchType As Search_Event_Log.searceType
+    Private regexStartedOrEndEventCheck As New Regex("(?:started the program|closed the program)", RegexOptions.Compiled + RegexOptions.IgnoreCase + RegexOptions.Multiline)
 
     Enum storedDateType
         unixTimestamp = 0
@@ -134,7 +135,7 @@ Public Class Form1
                     If chkProgramClosingAndOpeningEvents.Checked Then
                         itemsToPutInToList.Add(processLogEntry(logEntry, dateType))
                     Else
-                        If Not logEntry.logData.caseInsensitiveContains("started the program") And Not logEntry.logData.caseInsensitiveContains("closed the program") Then
+                        If Not regexStartedOrEndEventCheck.IsMatch(logEntry.logData) Then
                             itemsToPutInToList.Add(processLogEntry(logEntry, dateType))
                         End If
                     End If
@@ -182,7 +183,7 @@ Public Class Form1
                 If chkProgramClosingAndOpeningEvents.Checked Then
                     itemsToPutInToList.Add(processLogEntry(item, dateType))
                 Else
-                    If Not item.logData.caseInsensitiveContains("started the program") And Not item.logData.caseInsensitiveContains("closed the program") Then
+                    If Not regexStartedOrEndEventCheck.IsMatch(item.logData) Then
                         itemsToPutInToList.Add(processLogEntry(item, dateType))
                     End If
                 End If
