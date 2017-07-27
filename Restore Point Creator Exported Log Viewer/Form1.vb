@@ -34,17 +34,11 @@ Public Class Form1
 
         Select Case logEntry.logType
             Case Eventing.Reader.StandardEventLevel.Error ' Error
-                listViewItemObject = New eventLogListEntry("Error") With {
-                    .ImageIndex = 0
-                }
+                listViewItemObject = New eventLogListEntry("Error") With {.ImageIndex = 0}
             Case Eventing.Reader.StandardEventLevel.Informational ' Information
-                listViewItemObject = New eventLogListEntry("Information") With {
-                    .ImageIndex = 1
-                }
+                listViewItemObject = New eventLogListEntry("Information") With {.ImageIndex = 1}
             Case Eventing.Reader.StandardEventLevel.Warning ' Warning
-                listViewItemObject = New eventLogListEntry("Warning") With {
-                    .ImageIndex = 2
-                }
+                listViewItemObject = New eventLogListEntry("Warning") With {.ImageIndex = 2}
             Case Else
                 listViewItemObject = New eventLogListEntry("Unknown")
         End Select
