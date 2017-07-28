@@ -19,6 +19,7 @@ Public Class Form1
 
     Private rawSearchTerms As String = Nothing, previousSearchType As Search_Event_Log.searceType
     Private regexStartedOrEndEventCheck As New Regex("(?:started the program|closed the program)", RegexOptions.Compiled + RegexOptions.IgnoreCase + RegexOptions.Multiline)
+    Private eventLogContents As New List(Of eventLogListEntry)
 
     Enum storedDateType
         unixTimestamp = 0
@@ -94,8 +95,8 @@ Public Class Form1
         Dim fileInfo As New IO.FileInfo(strFileName)
         Dim timeStamp As New Stopwatch
         Dim dateType As storedDateType
-        Dim itemsToPutInToList As New List(Of ListViewItem)
 
+        eventLogContents.Clear()
         timeStamp.Start()
 
         If fileInfo.Extension.Equals(".reslog", StringComparison.OrdinalIgnoreCase) Then
@@ -125,14 +126,15 @@ Public Class Form1
                     End If
                 Else
                     logEntry = jsonEngine.Deserialize(strLineInFile, GetType(restorePointCreatorExportedLog))
+                    eventLogContents.Add(processLogEntry(logEntry, dateType))
 
-                    If chkProgramClosingAndOpeningEvents.Checked Then
-                        itemsToPutInToList.Add(processLogEntry(logEntry, dateType))
-                    Else
-                        If Not regexStartedOrEndEventCheck.IsMatch(logEntry.logData) Then
-                            itemsToPutInToList.Add(processLogEntry(logEntry, dateType))
-                        End If
-                    End If
+                    'If chkProgramClosingAndOpeningEvents.Checked Then
+                    '    itemsToPutInToList.Add(processLogEntry(logEntry, dateType))
+                    'Else
+                    '    If Not regexStartedOrEndEventCheck.IsMatch(logEntry.logData) Then
+                    '        itemsToPutInToList.Add(processLogEntry(logEntry, dateType))
+                    '    End If
+                    'End If
                 End If
 
                 strLineInFile = fileHandle.ReadLine
@@ -173,20 +175,22 @@ Public Class Form1
                 lblDateType.Text = "Date Type: UNIX Timestamp"
             End If
 
-            For Each item As restorePointCreatorExportedLog In exportedLogFile.logsEntries
-                If chkProgramClosingAndOpeningEvents.Checked Then
-                    itemsToPutInToList.Add(processLogEntry(item, dateType))
-                Else
-                    If Not regexStartedOrEndEventCheck.IsMatch(item.logData) Then
-                        itemsToPutInToList.Add(processLogEntry(item, dateType))
-                    End If
-                End If
+            For Each logEntry As restorePointCreatorExportedLog In exportedLogFile.logsEntries
+                eventLogContents.Add(processLogEntry(logEntry, dateType))
+
+                'If chkProgramClosingAndOpeningEvents.Checked Then
+                '    itemsToPutInToList.Add(processLogEntry(item, dateType))
+                'Else
+                '    If Not regexStartedOrEndEventCheck.IsMatch(item.logData) Then
+                '        itemsToPutInToList.Add(processLogEntry(item, dateType))
+                '    End If
+                'End If
             Next
         End If
 
         With eventLogList
             .Items.Clear()
-            .Items.AddRange(itemsToPutInToList.ToArray())
+            .Items.AddRange(eventLogContents.ToArray())
             .Sort()
         End With
 
@@ -320,8 +324,6 @@ Public Class Form1
 
     Private Sub eventLogList_ColumnWidthChanged(sender As Object, e As ColumnWidthChangedEventArgs) Handles eventLogList.ColumnWidthChanged
         If boolDoneLoading Then
-            If ColumnHeader5.Width <> 18 Then ColumnHeader5.Width = 18
-
             My.Settings.eventLogColumn1Size = ColumnHeader1.Width
             My.Settings.eventLogColumn2Size = ColumnHeader2.Width
             My.Settings.eventLogColumn3Size = ColumnHeader3.Width
@@ -447,12 +449,6 @@ Public Class Form1
         End Try
     End Sub
 
-    Sub highlightItemInList(ByRef item As ListViewItem, ByRef longEntriesFound As Long)
-        item.SubItems(4).Text = "*"
-        item.BackColor = Color.LightBlue
-        longEntriesFound += 1
-    End Sub
-
     ''' <summary>Tests to see if the RegEx pattern is valid or not.</summary>
     ''' <param name="strPattern">A RegEx pattern.</param>
     ''' <returns>A Boolean value. If True, the RegEx pattern is valid. If False, the RegEx pattern is not valid.</returns>
@@ -499,51 +495,49 @@ Public Class Form1
             searchWindow.Dispose()
             searchWindow = Nothing
 
-            Dim longEntriesFound As Long = 0
+            eventLogList.Items.Clear()
 
-            For Each item As eventLogListEntry In eventLogList.Items
+            For Each item As eventLogListEntry In eventLogContents
                 With item
                     If boolUseRegEx Then
                         If searchType = Search_Event_Log.searceType.typeAny And .eventLogText.regExSearch(searchTerms) Then
-                            highlightItemInList(item, longEntriesFound)
+                            eventLogList.Items.Add(item)
                         ElseIf searchType = Search_Event_Log.searceType.typeError And .strEventLogLevel = EventLogEntryType.Error.ToString And .eventLogText.regExSearch(searchTerms) Then
-                            highlightItemInList(item, longEntriesFound)
+                            eventLogList.Items.Add(item)
                         ElseIf searchType = Search_Event_Log.searceType.typeInfo And .strEventLogLevel = EventLogEntryType.Information.ToString And .eventLogText.regExSearch(searchTerms) Then
-                            highlightItemInList(item, longEntriesFound)
+                            eventLogList.Items.Add(item)
                         End If
                     ElseIf boolCaseInsensitive Then
                         If searchType = Search_Event_Log.searceType.typeAny And .eventLogText.caseInsensitiveContains(searchTerms) Then
-                            highlightItemInList(item, longEntriesFound)
+                            eventLogList.Items.Add(item)
                         ElseIf searchType = Search_Event_Log.searceType.typeError And .strEventLogLevel = EventLogEntryType.Error.ToString And .eventLogText.caseInsensitiveContains(searchTerms) Then
-                            highlightItemInList(item, longEntriesFound)
+                            eventLogList.Items.Add(item)
                         ElseIf searchType = Search_Event_Log.searceType.typeInfo And .strEventLogLevel = EventLogEntryType.Information.ToString And .eventLogText.caseInsensitiveContains(searchTerms) Then
-                            highlightItemInList(item, longEntriesFound)
+                            eventLogList.Items.Add(item)
                         End If
                     Else
                         If searchType = Search_Event_Log.searceType.typeAny And .eventLogText.Contains(searchTerms) Then
-                            highlightItemInList(item, longEntriesFound)
+                            eventLogList.Items.Add(item)
                         ElseIf searchType = Search_Event_Log.searceType.typeError And .strEventLogLevel = EventLogEntryType.Error.ToString And .eventLogText.Contains(searchTerms) Then
-                            highlightItemInList(item, longEntriesFound)
+                            eventLogList.Items.Add(item)
                         ElseIf searchType = Search_Event_Log.searceType.typeInfo And .strEventLogLevel = EventLogEntryType.Information.ToString And .eventLogText.Contains(searchTerms) Then
-                            highlightItemInList(item, longEntriesFound)
+                            eventLogList.Items.Add(item)
                         End If
                     End If
                 End With
             Next
 
-            If longEntriesFound <> 0 Then
-                eventLogList.ListViewItemSorter = New ListViewComparer(4, SortOrder.Descending)
+            If eventLogList.Items.Count <> 0 Then
                 eventLogList.Sort()
-                eventLogList.EnsureVisible(0)
 
                 Dim strEntriesFound As String
-                If longEntriesFound = 1 Then
+                If eventLogList.Items.Count = 1 Then
                     strEntriesFound = "1 log entry was found."
                 Else
-                    strEntriesFound = longEntriesFound & " log entries were found."
+                    strEntriesFound = eventLogList.Items.Count.ToString & " log entries were found."
                 End If
 
-                MsgBox("Search complete. " & strEntriesFound & " The event log entries that contain your search terms have been highlighted in blue.", MsgBoxStyle.Information, Me.Text)
+                MsgBox("Search complete. " & strEntriesFound, MsgBoxStyle.Information, Me.Text)
             Else
                 MsgBox("Search complete. No results found.", MsgBoxStyle.Information, Me.Text)
             End If
@@ -591,13 +585,11 @@ Public Class Form1
     Private Sub btnClear_Click(sender As Object, e As EventArgs) Handles btnClear.Click
         rawSearchTerms = Nothing
 
-        For Each item As ListViewItem In eventLogList.Items
-            item.SubItems(4).Text = ""
-            item.BackColor = eventLogList.BackColor
-        Next
-
-        eventLogList.ListViewItemSorter = New ListViewComparer(1, SortOrder.Descending)
-        eventLogList.Sort()
+        With eventLogList
+            .Items.Clear()
+            .Items.AddRange(eventLogContents.ToArray())
+            .Sort()
+        End With
     End Sub
 
     Private Sub chkAssociate_Click(sender As Object, e As EventArgs) Handles chkAssociate.Click
@@ -641,6 +633,11 @@ Public Class Form1
     Private Sub chkProgramClosingAndOpeningEvents_Click(sender As Object, e As EventArgs) Handles chkProgramClosingAndOpeningEvents.Click
         My.Settings.boolIncludeOpeningAndClosingEvents = chkProgramClosingAndOpeningEvents.Checked
         If boolFileLoaded Then openFile(strLoadedFile)
+    End Sub
+
+    Private Sub Form1_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
+        My.Settings.windowSize = Me.Size
+        My.Settings.windowState = Me.WindowState
     End Sub
 End Class
 
