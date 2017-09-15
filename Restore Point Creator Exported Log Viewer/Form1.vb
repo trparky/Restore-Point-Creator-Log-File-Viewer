@@ -150,9 +150,9 @@ Public Class Form1
         ElseIf fileInfo.Extension.Equals(".reslogx", StringComparison.OrdinalIgnoreCase) Then
             If exportedLogFile Is Nothing Then
                 exportedLogFile = New exportedLogFile()
-                Dim xmlSerializerObject As New Xml.Serialization.XmlSerializer(exportedLogFile.GetType)
 
                 Using streamReader As New IO.StreamReader(strFileName)
+                    Dim xmlSerializerObject As New Xml.Serialization.XmlSerializer(exportedLogFile.GetType)
                     exportedLogFile = xmlSerializerObject.Deserialize(streamReader)
                 End Using
 
