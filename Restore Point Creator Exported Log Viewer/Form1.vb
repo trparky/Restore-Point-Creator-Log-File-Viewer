@@ -103,66 +103,58 @@ Public Class Form1
             lblLogFileType.Text = "Log File Type: Legacy JSON"
             Dim jsonEngine As New Web.Script.Serialization.JavaScriptSerializer
             Dim logEntry As restorePointCreatorExportedLog
+            Dim strLineInFile As String
 
-            Dim fileHandle As New IO.StreamReader(strFileName, Encoding.UTF8)
-            Dim strLineInFile As String = fileHandle.ReadLine
-
-            lblProgramVersion.Text = ""
-            lblProgramVersion.Visible = False
-
-            lblOSVersion.Text = ""
-            lblOSVersion.Visible = False
-
-            While strLineInFile IsNot Nothing
-                If strLineInFile.StartsWith("//") Then
-                    If strLineInFile.ToLower.StartsWith("// program version: ") Then
-                        lblProgramVersion.Text = strLineInFile.Replace("// ", "")
-                        lblProgramVersion.Visible = True
-                    ElseIf strLineInFile.ToLower.StartsWith("// operating system: ") Then
-                        lblOSVersion.Text = strLineInFile.Replace("// ", "")
-                        lblOSVersion.Visible = True
-                    ElseIf strLineInFile.ToLower.StartsWith("// export data version: ") Then
-                        shortExportDataVersion = Short.Parse(Regex.Match(strLineInFile, "// Export Data Version: (\d{1,2})", RegexOptions.IgnoreCase).Groups(1).Value)
-                    End If
-                Else
-                    logEntry = jsonEngine.Deserialize(strLineInFile, GetType(restorePointCreatorExportedLog))
-                    eventLogContents.Add(processLogEntry(logEntry, dateType))
-
-                    'If chkProgramClosingAndOpeningEvents.Checked Then
-                    '    itemsToPutInToList.Add(processLogEntry(logEntry, dateType))
-                    'Else
-                    '    If Not regexStartedOrEndEventCheck.IsMatch(logEntry.logData) Then
-                    '        itemsToPutInToList.Add(processLogEntry(logEntry, dateType))
-                    '    End If
-                    'End If
-                End If
-
+            Using fileHandle As New IO.StreamReader(strFileName, Encoding.UTF8)
                 strLineInFile = fileHandle.ReadLine
-            End While
 
-            With lblDateType
-                If shortExportDataVersion = 1 Then
-                    If dateType = storedDateType.windowsTimeString Then
-                        .Text = "Date Type: Date String"
-                    ElseIf dateType = storedDateType.unixTimestamp Then
+                lblProgramVersion.Text = ""
+                lblProgramVersion.Visible = False
+
+                lblOSVersion.Text = ""
+                lblOSVersion.Visible = False
+
+                While strLineInFile IsNot Nothing
+                    If strLineInFile.StartsWith("//") Then
+                        If strLineInFile.ToLower.StartsWith("// program version: ") Then
+                            lblProgramVersion.Text = strLineInFile.Replace("// ", "")
+                            lblProgramVersion.Visible = True
+                        ElseIf strLineInFile.ToLower.StartsWith("// operating system: ") Then
+                            lblOSVersion.Text = strLineInFile.Replace("// ", "")
+                            lblOSVersion.Visible = True
+                        ElseIf strLineInFile.ToLower.StartsWith("// export data version: ") Then
+                            shortExportDataVersion = Short.Parse(Regex.Match(strLineInFile, "// Export Data Version: (\d{1,2})", RegexOptions.IgnoreCase).Groups(1).Value)
+                        End If
+                    Else
+                        logEntry = jsonEngine.Deserialize(strLineInFile, GetType(restorePointCreatorExportedLog))
+                        eventLogContents.Add(processLogEntry(logEntry, dateType))
+                    End If
+
+                    strLineInFile = fileHandle.ReadLine
+                End While
+
+                With lblDateType
+                    If shortExportDataVersion = 1 Then
+                        If dateType = storedDateType.windowsTimeString Then
+                            .Text = "Date Type: Date String"
+                        ElseIf dateType = storedDateType.unixTimestamp Then
+                            .Text = "Date Type: UNIX Timestamp"
+                        End If
+                    ElseIf shortExportDataVersion = 3 Then
                         .Text = "Date Type: UNIX Timestamp"
                     End If
-                ElseIf shortExportDataVersion = 3 Then
-                    .Text = "Date Type: UNIX Timestamp"
-                End If
-            End With
+                End With
 
-            jsonEngine = Nothing
-            fileHandle.Close()
-            fileHandle.Dispose()
+                jsonEngine = Nothing
+            End Using
         ElseIf fileInfo.Extension.Equals(".reslogx", StringComparison.OrdinalIgnoreCase) Then
             If exportedLogFile Is Nothing Then
-                Dim streamReader As New IO.StreamReader(strFileName)
                 exportedLogFile = New exportedLogFile()
                 Dim xmlSerializerObject As New Xml.Serialization.XmlSerializer(exportedLogFile.GetType)
-                exportedLogFile = xmlSerializerObject.Deserialize(streamReader)
-                streamReader.Close()
-                streamReader.Dispose()
+
+                Using streamReader As New IO.StreamReader(strFileName)
+                    exportedLogFile = xmlSerializerObject.Deserialize(streamReader)
+                End Using
 
                 lblProgramVersion.Text = "Program Version: " & exportedLogFile.programVersion
                 lblProgramVersion.Visible = True
