@@ -20,10 +20,12 @@ Public Class Form1
     Private rawSearchTerms As String = Nothing, previousSearchType As Search_Event_Log.searceType
     Private regexStartedOrEndEventCheck As New Regex("(?:started the program|closed the program)", RegexOptions.Compiled + RegexOptions.IgnoreCase + RegexOptions.Multiline)
     Private eventLogContents As New List(Of eventLogListEntry)
+    Private nullDate As New Date(1, 1, 1, 0, 0, 0, DateTimeKind.Local)
 
     Enum storedDateType
         unixTimestamp = 0
         windowsTimeString = 1
+        mixed = 3
     End Enum
 
     ''' <summary>Creates a List View Item out of a log entry.</summary>
@@ -75,6 +77,16 @@ Public Class Form1
 
             entryDate = UNIXTimestampToDate(logEntry.unixTime)
             listViewItemObject.SubItems.Add(entryDate.ToLocalTime.ToString)
+        ElseIf shortExportDataVersion = 5 Then
+            dateType = storedDateType.mixed
+
+            If logEntry.unixTime = 0 Then
+                entryDate = logEntry.dateObject.ToLocalTime
+            Else
+                entryDate = UNIXTimestampToDate(logEntry.unixTime)
+            End If
+
+            listViewItemObject.SubItems.Add(entryDate.ToString)
         End If
 
         With listViewItemObject
@@ -142,6 +154,8 @@ Public Class Form1
                         End If
                     ElseIf shortExportDataVersion = 3 Then
                         .Text = "Date Type: UNIX Timestamp"
+                    ElseIf shortExportDataVersion = 5 Then
+                        .Text = "Date Type: Mixed"
                     End If
                 End With
 
@@ -164,7 +178,11 @@ Public Class Form1
 
                 shortExportDataVersion = exportedLogFile.version
 
-                lblDateType.Text = "Date Type: UNIX Timestamp"
+                If exportedLogFile.version = 5 Then
+                    lblDateType.Text = "Date Type: Mixed"
+                Else
+                    lblDateType.Text = "Date Type: UNIX Timestamp"
+                End If
             End If
 
             For Each logEntry As restorePointCreatorExportedLog In exportedLogFile.logsEntries
@@ -222,14 +240,7 @@ Public Class Form1
     End Function
 
     Private Function UNIXTimestampToDate(ByVal strUnixTime As ULong) As Date
-        'Dim tmpDate As Date = DateAdd(DateInterval.Second, strUnixTime, #1/1/1970#)
-        Dim tmpDate As Date = DateAdd(DateInterval.Second, strUnixTime, New DateTime(1970, 1, 1, 0, 0, 0, 0))
-
-        If tmpDate.IsDaylightSavingTime Then
-            tmpDate = DateAdd(DateInterval.Hour, 1, tmpDate)
-        End If
-
-        Return tmpDate
+        Return DateAdd(DateInterval.Second, strUnixTime, New DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)).ToLocalTime
     End Function
 
     Private Sub registerFileExtension(extension As String)
@@ -638,6 +649,7 @@ Public Class restorePointCreatorExportedLog
     Public logID As Long
     Public unixTime As ULong = 0
     Public logDate, logData, logSource As String
+    Public dateObject As Date
 End Class
 
 Public Class exportedLogFile
