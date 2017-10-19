@@ -79,13 +79,7 @@ Public Class Form1
             listViewItemObject.SubItems.Add(entryDate.ToLocalTime.ToString)
         ElseIf shortExportDataVersion = 5 Then
             dateType = storedDateType.mixed
-
-            If logEntry.unixTime = 0 Then
-                entryDate = logEntry.dateObject.ToLocalTime
-            Else
-                entryDate = UNIXTimestampToDate(logEntry.unixTime)
-            End If
-
+            entryDate = If(logEntry.unixTime = 0, logEntry.dateObject.ToLocalTime, UNIXTimestampToDate(logEntry.unixTime))
             listViewItemObject.SubItems.Add(entryDate.ToString)
         End If
 
@@ -438,7 +432,6 @@ Public Class Form1
         Try
             If eventLogList.SelectedItems.Count <> 0 Then
                 eventLogText.Text = DirectCast(eventLogList.SelectedItems(0), eventLogListEntry).eventLogText.Replace(vbLf, vbCrLf)
-                Debug.WriteLine(eventLogText.Text)
             End If
         Catch ex As Exception
         End Try
