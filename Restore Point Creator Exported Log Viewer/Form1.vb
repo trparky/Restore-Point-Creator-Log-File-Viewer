@@ -182,6 +182,23 @@ Public Class Form1
             For Each logEntry As restorePointCreatorExportedLog In exportedLogFile.logsEntries
                 eventLogContents.Add(processLogEntry(logEntry, dateType))
             Next
+        ElseIf fileInfo.Extension.Equals(".log", StringComparison.OrdinalIgnoreCase) Then
+            lblProgramVersion.Visible = False
+            lblOSVersion.Visible = False
+            lblLogFileType.Visible = False
+            lblDateType.Text = "Date Type: Windows Timestamp"
+
+            Dim restorePointCreatorExportedLogObject As New List(Of restorePointCreatorExportedLog)
+
+            Using streamReader As New IO.StreamReader(strFileName)
+                Dim xmlSerializerObject As New Xml.Serialization.XmlSerializer(restorePointCreatorExportedLogObject.GetType)
+                restorePointCreatorExportedLogObject = xmlSerializerObject.Deserialize(streamReader)
+            End Using
+
+            shortExportDataVersion = 5
+            For Each logEntry As restorePointCreatorExportedLog In restorePointCreatorExportedLogObject
+                eventLogContents.Add(processLogEntry(logEntry, dateType))
+            Next
         End If
 
         With eventLogList
@@ -207,7 +224,7 @@ Public Class Form1
     Private Sub btnBrowseForFile_Click(sender As Object, e As EventArgs) Handles btnBrowseForFile.Click
         OpenFileDialog1.Title = "Open Restore Point Creator Exported Log File"
         OpenFileDialog1.FileName = Nothing
-        OpenFileDialog1.Filter = "Restore Point Creator Exported Log File|*.reslog;*.reslogx"
+        OpenFileDialog1.Filter = "Both Log File Types|*.reslog;*.reslogx;*.log|Restore Point Creator Exported Log File|*.reslog;*.reslogx|Raw Application Log File|*.log"
 
         If OpenFileDialog1.ShowDialog = DialogResult.OK Then
             btnRawView.Enabled = True
