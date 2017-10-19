@@ -187,14 +187,6 @@ Public Class Form1
 
             For Each logEntry As restorePointCreatorExportedLog In exportedLogFile.logsEntries
                 eventLogContents.Add(processLogEntry(logEntry, dateType))
-
-                'If chkProgramClosingAndOpeningEvents.Checked Then
-                '    itemsToPutInToList.Add(processLogEntry(item, dateType))
-                'Else
-                '    If Not regexStartedOrEndEventCheck.IsMatch(item.logData) Then
-                '        itemsToPutInToList.Add(processLogEntry(item, dateType))
-                '    End If
-                'End If
             Next
         End If
 
