@@ -173,6 +173,7 @@ Public Class Form1
                 shortExportDataVersion = exportedLogFile.version
 
                 If exportedLogFile.version = 5 Then
+                    If isTheLogSourceColumnInTheList() Then eventLogList.Columns.Remove(colLogSource)
                     lblDateType.Text = "Date Type: Mixed"
                 Else
                     lblDateType.Text = "Date Type: UNIX Timestamp"
@@ -221,12 +222,22 @@ Public Class Form1
         MsgBox("Event Log Entry File Import Complete.", MsgBoxStyle.Information, Me.Text)
     End Sub
 
+    Private Function isTheLogSourceColumnInTheList() As Boolean
+        If eventLogList.Columns.Cast(Of ColumnHeader).ToList.Where(Function(item As ColumnHeader) item.Text.Equals("log source", StringComparison.OrdinalIgnoreCase)).Count = 0 Then
+            Return False
+        Else
+            Return True
+        End If
+    End Function
+
     Private Sub btnBrowseForFile_Click(sender As Object, e As EventArgs) Handles btnBrowseForFile.Click
         OpenFileDialog1.Title = "Open Restore Point Creator Exported Log File"
         OpenFileDialog1.FileName = Nothing
         OpenFileDialog1.Filter = "Both Log File Types|*.reslog;*.reslogx;*.log|Restore Point Creator Exported Log File|*.reslog;*.reslogx|Raw Application Log File|*.log"
 
         If OpenFileDialog1.ShowDialog = DialogResult.OK Then
+            If Not isTheLogSourceColumnInTheList() Then eventLogList.Columns.Add(colLogSource)
+
             btnRawView.Enabled = True
             exportedLogFile = Nothing
             openFile(OpenFileDialog1.FileName)
