@@ -29,10 +29,10 @@ Partial Class Form1
         Me.btnSearch = New System.Windows.Forms.Button()
         Me.btnClear = New System.Windows.Forms.Button()
         Me.eventLogList = New System.Windows.Forms.ListView()
-        Me.ColumnHeader1 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.ColumnHeader2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.ColumnHeader3 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.ColumnHeader4 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.colEventType = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.colDateTime = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.colEventID = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.colLogSource = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.imageList = New System.Windows.Forms.ImageList(Me.components)
         Me.eventLogText = New System.Windows.Forms.TextBox()
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
@@ -138,7 +138,7 @@ Partial Class Form1
         Me.eventLogList.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.eventLogList.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader1, Me.ColumnHeader2, Me.ColumnHeader3, Me.ColumnHeader4})
+        Me.eventLogList.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.colEventType, Me.colDateTime, Me.colEventID, Me.colLogSource})
         Me.eventLogList.Enabled = False
         Me.eventLogList.FullRowSelect = True
         Me.eventLogList.Location = New System.Drawing.Point(3, 3)
@@ -150,25 +150,25 @@ Partial Class Form1
         Me.eventLogList.UseCompatibleStateImageBehavior = False
         Me.eventLogList.View = System.Windows.Forms.View.Details
         '
-        'ColumnHeader1
+        'colEventType
         '
-        Me.ColumnHeader1.Text = "Event Type"
-        Me.ColumnHeader1.Width = 100
+        Me.colEventType.Text = "Event Type"
+        Me.colEventType.Width = 100
         '
-        'ColumnHeader2
+        'colDateTime
         '
-        Me.ColumnHeader2.Text = "Date & Time"
-        Me.ColumnHeader2.Width = 100
+        Me.colDateTime.Text = "Date & Time"
+        Me.colDateTime.Width = 100
         '
-        'ColumnHeader3
+        'colEventID
         '
-        Me.ColumnHeader3.Text = "Event ID"
-        Me.ColumnHeader3.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        Me.colEventID.Text = "Event ID"
+        Me.colEventID.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
-        'ColumnHeader4
+        'colLogSource
         '
-        Me.ColumnHeader4.Text = "Log Source"
-        Me.ColumnHeader4.Width = 95
+        Me.colLogSource.Text = "Log Source"
+        Me.colLogSource.Width = 95
         '
         'imageList
         '
@@ -344,10 +344,10 @@ Partial Class Form1
     Friend WithEvents OpenFileDialog1 As OpenFileDialog
     Friend WithEvents imageList As ImageList
     Friend WithEvents eventLogList As ListView
-    Friend WithEvents ColumnHeader1 As ColumnHeader
-    Friend WithEvents ColumnHeader2 As ColumnHeader
-    Friend WithEvents ColumnHeader3 As ColumnHeader
-    Friend WithEvents ColumnHeader4 As ColumnHeader
+    Friend WithEvents colEventType As ColumnHeader
+    Friend WithEvents colDateTime As ColumnHeader
+    Friend WithEvents colEventID As ColumnHeader
+    Friend WithEvents colLogSource As ColumnHeader
     Friend WithEvents btnSearch As Button
     Friend WithEvents btnClear As Button
     Friend WithEvents lblFileName As Label

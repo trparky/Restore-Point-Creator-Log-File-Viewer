@@ -285,10 +285,10 @@ Public Class Form1
 
         applySavedSorting()
 
-        ColumnHeader1.Width = My.Settings.eventLogColumn1Size
-        ColumnHeader2.Width = My.Settings.eventLogColumn2Size
-        ColumnHeader3.Width = My.Settings.eventLogColumn3Size
-        ColumnHeader4.Width = My.Settings.eventLogColumn4Size
+        colEventType.Width = My.Settings.eventLogColumn1Size
+        colDateTime.Width = My.Settings.eventLogColumn2Size
+        colEventID.Width = My.Settings.eventLogColumn3Size
+        colLogSource.Width = My.Settings.eventLogColumn4Size
 
         chkProgramClosingAndOpeningEvents.Checked = My.Settings.boolIncludeOpeningAndClosingEvents
 
@@ -330,10 +330,10 @@ Public Class Form1
 
     Private Sub eventLogList_ColumnWidthChanged(sender As Object, e As ColumnWidthChangedEventArgs) Handles eventLogList.ColumnWidthChanged
         If boolDoneLoading Then
-            My.Settings.eventLogColumn1Size = ColumnHeader1.Width
-            My.Settings.eventLogColumn2Size = ColumnHeader2.Width
-            My.Settings.eventLogColumn3Size = ColumnHeader3.Width
-            My.Settings.eventLogColumn4Size = ColumnHeader4.Width
+            My.Settings.eventLogColumn1Size = colEventType.Width
+            My.Settings.eventLogColumn2Size = colDateTime.Width
+            My.Settings.eventLogColumn3Size = colEventID.Width
+            My.Settings.eventLogColumn4Size = colLogSource.Width
             My.Settings.Save()
         End If
     End Sub
