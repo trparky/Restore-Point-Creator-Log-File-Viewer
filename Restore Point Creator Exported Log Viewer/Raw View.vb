@@ -15,10 +15,9 @@ Public Class Raw_View
     Private Sub Raw_View_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         lblFileName.Text = "Log File: " & strFileToLoad & "         File Size: " & bytesToHumanSize(New IO.FileInfo(strFileToLoad).Length)
 
-        Dim fileHandle As New IO.StreamReader(strFileToLoad, Encoding.UTF8)
-        txtRawFileView.Text = fileHandle.ReadToEnd.Trim
-        fileHandle.Close()
-        fileHandle.Dispose()
+        Using fileHandle As New IO.StreamReader(strFileToLoad, Encoding.UTF8)
+            txtRawFileView.Text = fileHandle.ReadToEnd.Trim
+        End Using
     End Sub
 
     Private Sub Raw_View_ResizeEnd(sender As Object, e As EventArgs) Handles Me.ResizeEnd

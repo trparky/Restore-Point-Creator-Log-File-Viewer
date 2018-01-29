@@ -33,6 +33,7 @@ Partial Class Form1
         Me.colDateTime = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.colEventID = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.colLogSource = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.colException = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.imageList = New System.Windows.Forms.ImageList(Me.components)
         Me.eventLogText = New System.Windows.Forms.TextBox()
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
@@ -138,7 +139,7 @@ Partial Class Form1
         Me.eventLogList.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.eventLogList.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.colEventType, Me.colDateTime, Me.colEventID, Me.colLogSource})
+        Me.eventLogList.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.colEventType, Me.colDateTime, Me.colEventID, Me.colException, Me.colLogSource})
         Me.eventLogList.Enabled = False
         Me.eventLogList.FullRowSelect = True
         Me.eventLogList.Location = New System.Drawing.Point(3, 3)
@@ -169,6 +170,11 @@ Partial Class Form1
         '
         Me.colLogSource.Text = "Log Source"
         Me.colLogSource.Width = 95
+        '
+        'colException
+        '
+        Me.colException.Text = "Exception"
+        Me.colException.Width = 60
         '
         'imageList
         '
@@ -348,6 +354,7 @@ Partial Class Form1
     Friend WithEvents colDateTime As ColumnHeader
     Friend WithEvents colEventID As ColumnHeader
     Friend WithEvents colLogSource As ColumnHeader
+    Friend WithEvents colException As ColumnHeader
     Friend WithEvents btnSearch As Button
     Friend WithEvents btnClear As Button
     Friend WithEvents lblFileName As Label

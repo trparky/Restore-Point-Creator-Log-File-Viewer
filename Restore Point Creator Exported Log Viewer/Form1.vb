@@ -85,6 +85,7 @@ Public Class Form1
 
         With listViewItemObject
             .SubItems.Add(formatNumber(logEntry.logID))
+            .SubItems.Add(If(logEntry.boolException, "Yes", "No"))
             .SubItems.Add(logEntry.logSource)
             .SubItems.Add("")
         End With
@@ -122,13 +123,13 @@ Public Class Form1
 
                 While strLineInFile IsNot Nothing
                     If strLineInFile.StartsWith("//") Then
-                        If strLineInFile.ToLower.StartsWith("// program version: ") Then
+                        If strLineInFile.StartsWith("// program version: ", StringComparison.OrdinalIgnoreCase) Then
                             lblProgramVersion.Text = strLineInFile.Replace("// ", "")
                             lblProgramVersion.Visible = True
-                        ElseIf strLineInFile.ToLower.StartsWith("// operating system: ") Then
+                        ElseIf strLineInFile.StartsWith("// operating system: ", StringComparison.OrdinalIgnoreCase) Then
                             lblOSVersion.Text = strLineInFile.Replace("// ", "")
                             lblOSVersion.Visible = True
-                        ElseIf strLineInFile.ToLower.StartsWith("// export data version: ") Then
+                        ElseIf strLineInFile.StartsWith("// export data version: ", StringComparison.OrdinalIgnoreCase) Then
                             shortExportDataVersion = Short.Parse(Regex.Match(strLineInFile, "// Export Data Version: (\d{1,2})", RegexOptions.IgnoreCase).Groups(1).Value)
                         End If
                     Else
@@ -223,11 +224,7 @@ Public Class Form1
     End Sub
 
     Private Function isTheLogSourceColumnInTheList() As Boolean
-        If eventLogList.Columns.Cast(Of ColumnHeader).ToList.Where(Function(item As ColumnHeader) item.Text.Equals("log source", StringComparison.OrdinalIgnoreCase)).Count = 0 Then
-            Return False
-        Else
-            Return True
-        End If
+        Return If(eventLogList.Columns.Cast(Of ColumnHeader).ToList.Where(Function(item As ColumnHeader) item.Text.Equals("log source", StringComparison.OrdinalIgnoreCase)).Count = 0, False, True)
     End Function
 
     Private Sub btnBrowseForFile_Click(sender As Object, e As EventArgs) Handles btnBrowseForFile.Click
@@ -246,11 +243,7 @@ Public Class Form1
 
     Public Function formatNumber(strInput As String) As String
         Dim longInput As Long
-        If Long.TryParse(strInput, longInput) Then
-            Return longInput.ToString("n0", Globalization.CultureInfo.InvariantCulture)
-        Else
-            Return strInput
-        End If
+        Return If(Long.TryParse(strInput, longInput), longInput.ToString("n0", Globalization.CultureInfo.InvariantCulture), strInput)
     End Function
 
     Private Function UNIXTimestampToDate(ByVal strUnixTime As ULong) As Date
@@ -300,12 +293,11 @@ Public Class Form1
         colDateTime.Width = My.Settings.eventLogColumn2Size
         colEventID.Width = My.Settings.eventLogColumn3Size
         colLogSource.Width = My.Settings.eventLogColumn4Size
+        colException.Width = My.Settings.eventLogColumn5Size
 
         chkProgramClosingAndOpeningEvents.Checked = My.Settings.boolIncludeOpeningAndClosingEvents
 
-        If Registry.CurrentUser.OpenSubKey("SOFTWARE\Classes\.reslog") IsNot Nothing And Registry.CurrentUser.OpenSubKey("SOFTWARE\Classes\.reslogx") IsNot Nothing Then
-            chkAssociate.Checked = True
-        End If
+        If Registry.CurrentUser.OpenSubKey("SOFTWARE\Classes\.reslog") IsNot Nothing And Registry.CurrentUser.OpenSubKey("SOFTWARE\Classes\.reslogx") IsNot Nothing Then chkAssociate.Checked = True
 
         boolDoneLoading = True
     End Sub
@@ -345,6 +337,7 @@ Public Class Form1
             My.Settings.eventLogColumn2Size = colDateTime.Width
             My.Settings.eventLogColumn3Size = colEventID.Width
             My.Settings.eventLogColumn4Size = colLogSource.Width
+            My.Settings.eventLogColumn5Size = colException.Width
             My.Settings.Save()
         End If
     End Sub
@@ -383,11 +376,7 @@ Public Class Form1
 
         ' Display the new sort order.
         m_SortingColumn = new_sorting_column
-        If sort_order = SortOrder.Ascending Then
-            m_SortingColumn.Text = "> " & m_SortingColumn.Text
-        Else
-            m_SortingColumn.Text = "< " & m_SortingColumn.Text
-        End If
+        m_SortingColumn.Text = If(sort_order = SortOrder.Ascending, "> " & m_SortingColumn.Text, "< " & m_SortingColumn.Text)
 
         ' Create a comparer.
         eventLogList.ListViewItemSorter = New ListViewComparer(e.Column, sort_order)
@@ -398,13 +387,8 @@ Public Class Form1
 
     Sub applySavedSorting()
         ' Some data validation.
-        If My.Settings.sortingColumn < 0 Or My.Settings.sortingColumn > 4 Then
-            My.Settings.sortingColumn = 0
-        End If
-
-        If My.Settings.sortingOrder <> 1 And My.Settings.sortingOrder <> 2 Then
-            My.Settings.sortingOrder = 2
-        End If
+        If My.Settings.sortingColumn < 0 Or My.Settings.sortingColumn > 4 Then My.Settings.sortingColumn = 0
+        If My.Settings.sortingOrder <> 1 And My.Settings.sortingOrder <> 2 Then My.Settings.sortingOrder = 2
         ' Some data validation.
 
         ' Get the new sorting column.
@@ -435,11 +419,7 @@ Public Class Form1
 
         ' Display the new sort order.
         m_SortingColumn = new_sorting_column
-        If sort_order = SortOrder.Ascending Then
-            m_SortingColumn.Text = "> " & m_SortingColumn.Text
-        Else
-            m_SortingColumn.Text = "< " & m_SortingColumn.Text
-        End If
+        m_SortingColumn.Text = If(sort_order = SortOrder.Ascending, "> " & m_SortingColumn.Text, "< " & m_SortingColumn.Text)
 
         ' Create a comparer.
         eventLogList.ListViewItemSorter = New ListViewComparer(My.Settings.sortingColumn, sort_order)
@@ -449,8 +429,10 @@ Public Class Form1
     End Sub
 
     Public Function removeSourceCodePathInfo(strInput As String) As String
-        If strInput.ToLower.caseInsensitiveContains("Google Drive") Then
-            Return Regex.Replace(strInput, Regex.Escape("C:\Users\Tom\OneDrive\My Visual Studio Projects\Projects\"), "", RegexOptions.IgnoreCase)
+        If strInput.regExSearch("(?:Google Drive|OneDrive|AppData)") Then
+            strInput = Regex.Replace(strInput, "C:\\Users\\Tom\\(?:Google Drive|OneDrive)\\My Visual Studio Projects\\Projects\\", "", RegexOptions.IgnoreCase)
+            strInput = strInput.caseInsensitiveReplace("C:\Users\Tom\AppData\Local\Temp\", "")
+            Return strInput
         Else
             Return strInput
         End If
@@ -545,14 +527,7 @@ Public Class Form1
 
             If eventLogList.Items.Count <> 0 Then
                 eventLogList.Sort()
-
-                Dim strEntriesFound As String
-                If eventLogList.Items.Count = 1 Then
-                    strEntriesFound = "1 log entry was found."
-                Else
-                    strEntriesFound = eventLogList.Items.Count.ToString & " log entries were found."
-                End If
-
+                Dim strEntriesFound As String = If(eventLogList.Items.Count, "1 log entry was found.", eventLogList.Items.Count.ToString & " log entries were found.")
                 MsgBox("Search complete. " & strEntriesFound, MsgBoxStyle.Information, Me.Text)
             Else
                 MsgBox("Search complete. No results found.", MsgBoxStyle.Information, Me.Text)
@@ -569,9 +544,7 @@ Public Class Form1
             executablePathPathInfo = Nothing
 
             If strCommandLineArguments = Nothing Then
-                If Environment.GetCommandLineArgs.Count <> 1 Then
-                    startInfo.Arguments = Environment.GetCommandLineArgs(1)
-                End If
+                If Environment.GetCommandLineArgs.Count <> 1 Then startInfo.Arguments = Environment.GetCommandLineArgs(1)
             Else
                 startInfo.Arguments = strCommandLineArguments
             End If
@@ -587,12 +560,7 @@ Public Class Form1
     Public Function areWeAnAdministrator() As Boolean
         Try
             Dim principal As WindowsPrincipal = New WindowsPrincipal(WindowsIdentity.GetCurrent())
-
-            If principal.IsInRole(WindowsBuiltInRole.Administrator) Then
-                Return True
-            Else
-                Return False
-            End If
+            Return If(principal.IsInRole(WindowsBuiltInRole.Administrator), True, False)
         Catch ex As Exception
             Return False
         End Try
@@ -663,6 +631,7 @@ Public Class restorePointCreatorExportedLog
     Public unixTime As ULong = 0
     Public logDate, logData, logSource As String
     Public dateObject As Date
+    Public boolException As Boolean
 End Class
 
 Public Class exportedLogFile

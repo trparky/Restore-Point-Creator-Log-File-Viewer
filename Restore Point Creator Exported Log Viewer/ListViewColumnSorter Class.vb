@@ -20,17 +20,8 @@ Class ListViewComparer
         Dim lvSecondListView As ListViewItem = lvInputSecondListView
 
         ' Get the sub-item values.
-        If lvFirstListView.SubItems.Count <= intColumnNumber Then
-            strFirstString = ""
-        Else
-            strFirstString = lvFirstListView.SubItems(intColumnNumber).Text
-        End If
-
-        If lvSecondListView.SubItems.Count <= intColumnNumber Then
-            strSecondString = ""
-        Else
-            strSecondString = lvSecondListView.SubItems(intColumnNumber).Text
-        End If
+        strFirstString = If(lvFirstListView.SubItems.Count <= intColumnNumber, "", lvFirstListView.SubItems(intColumnNumber).Text)
+        strSecondString = If(lvSecondListView.SubItems.Count <= intColumnNumber, "", lvSecondListView.SubItems(intColumnNumber).Text)
 
         If Text.RegularExpressions.Regex.IsMatch(strFirstString, "^\d{1,3}(,\d{3})*(\.\d+)?$") Then
             strFirstString = strFirstString.Replace(",", "")
