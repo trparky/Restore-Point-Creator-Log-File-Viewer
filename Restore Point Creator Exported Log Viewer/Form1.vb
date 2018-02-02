@@ -209,12 +209,12 @@ Public Class Form1
             .Sort()
         End With
 
-        lblCount.Text = "Number of Logs: " & eventLogList.Items.Count
+        lblCount.Text = "Number of Logs: " & eventLogList.Items.Count.ToString("n0", Globalization.CultureInfo.InvariantCulture)
         lblExportVersion.Text = "Data Export Version: " & shortExportDataVersion
         lblFileSize.Text = "File Size: " & bytesToHumanSize(New IO.FileInfo(strFileName).Length)
 
         timeStamp.Stop()
-        lblProcessed.Text = String.Format("Event Log Loaded and Processed in {0}ms ({1} seconds).", timeStamp.ElapsedMilliseconds, Math.Round(timeStamp.Elapsed.TotalSeconds, 3))
+        lblProcessed.Text = String.Format("Loaded in {0}ms.", timeStamp.ElapsedMilliseconds)
 
         btnClear.Enabled = True
         btnSearch.Enabled = True
