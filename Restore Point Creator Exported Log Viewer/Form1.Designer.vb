@@ -232,48 +232,56 @@ Partial Class Form1
         '
         Me.lblCount.Name = "lblCount"
         Me.lblCount.Size = New System.Drawing.Size(0, 17)
+        Me.lblCount.Text = "Number of Logs:"
         '
         'lblDateType
         '
         Me.lblDateType.Margin = New System.Windows.Forms.Padding(30, 3, 0, 2)
         Me.lblDateType.Name = "lblDateType"
         Me.lblDateType.Size = New System.Drawing.Size(0, 17)
+        Me.lblDateType.Text = "Data Type:"
         '
         'lblProcessed
         '
         Me.lblProcessed.Margin = New System.Windows.Forms.Padding(30, 3, 0, 2)
         Me.lblProcessed.Name = "lblProcessed"
         Me.lblProcessed.Size = New System.Drawing.Size(0, 17)
+        Me.lblProcessed.Text = "Loaded in..."
         '
         'lblProgramVersion
         '
         Me.lblProgramVersion.Margin = New System.Windows.Forms.Padding(30, 3, 0, 2)
         Me.lblProgramVersion.Name = "lblProgramVersion"
         Me.lblProgramVersion.Size = New System.Drawing.Size(0, 17)
+        Me.lblProgramVersion.Text = "Program Version:"
         '
         'lblOSVersion
         '
         Me.lblOSVersion.Margin = New System.Windows.Forms.Padding(30, 3, 0, 2)
         Me.lblOSVersion.Name = "lblOSVersion"
         Me.lblOSVersion.Size = New System.Drawing.Size(0, 17)
+        Me.lblOSVersion.Text = "Operating System:"
         '
         'lblExportVersion
         '
         Me.lblExportVersion.Margin = New System.Windows.Forms.Padding(30, 3, 0, 2)
         Me.lblExportVersion.Name = "lblExportVersion"
         Me.lblExportVersion.Size = New System.Drawing.Size(0, 17)
+        Me.lblExportVersion.Text = "Data Export Version:"
         '
         'lblLogFileType
         '
         Me.lblLogFileType.Margin = New System.Windows.Forms.Padding(30, 3, 0, 2)
         Me.lblLogFileType.Name = "lblLogFileType"
         Me.lblLogFileType.Size = New System.Drawing.Size(0, 17)
+        Me.lblLogFileType.Text = "Log File Type:"
         '
         'lblFileSize
         '
         Me.lblFileSize.Margin = New System.Windows.Forms.Padding(30, 3, 0, 2)
         Me.lblFileSize.Name = "lblFileSize"
         Me.lblFileSize.Size = New System.Drawing.Size(0, 17)
+        Me.lblFileSize.Text = "File Size:"
         '
         'chkProgramClosingAndOpeningEvents
         '
