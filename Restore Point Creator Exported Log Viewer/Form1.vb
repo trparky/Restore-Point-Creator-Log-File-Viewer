@@ -624,18 +624,3 @@ Public Class Form1
         My.Settings.windowState = Me.WindowState
     End Sub
 End Class
-
-Public Class restorePointCreatorExportedLog
-    Public logType As Short
-    Public logID As Long
-    Public unixTime As ULong = 0
-    Public logDate, logData, logSource As String
-    Public dateObject As Date
-    Public boolException As Boolean
-    Public boolSubmitted As Boolean
-End Class
-
-Public Class exportedLogFile
-    Public programVersion, operatingSystem As String, version As Short
-    Public logsEntries As List(Of restorePointCreatorExportedLog)
-End Class
