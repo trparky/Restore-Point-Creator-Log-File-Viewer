@@ -38,6 +38,8 @@ Partial Class Form1
         Me.eventLogText = New System.Windows.Forms.TextBox()
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog()
         Me.lblFileName = New System.Windows.Forms.Label()
+        Me.ContextMenuStrip1 = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.CopyPathToClipboardToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.chkAssociate = New System.Windows.Forms.CheckBox()
         Me.StatusStrip1 = New System.Windows.Forms.StatusStrip()
         Me.lblCount = New System.Windows.Forms.ToolStripStatusLabel()
@@ -56,6 +58,7 @@ Partial Class Form1
         Me.SplitContainer1.Panel2.SuspendLayout()
         Me.SplitContainer1.SuspendLayout()
         Me.TableLayoutPanel2.SuspendLayout()
+        Me.ContextMenuStrip1.SuspendLayout()
         Me.StatusStrip1.SuspendLayout()
         Me.TableLayoutPanel1.SuspendLayout()
         Me.SuspendLayout()
@@ -202,11 +205,25 @@ Partial Class Form1
         'lblFileName
         '
         Me.lblFileName.AutoSize = True
+        Me.lblFileName.ContextMenuStrip = Me.ContextMenuStrip1
         Me.lblFileName.Location = New System.Drawing.Point(12, 45)
         Me.lblFileName.Name = "lblFileName"
         Me.lblFileName.Size = New System.Drawing.Size(80, 13)
         Me.lblFileName.TabIndex = 7
         Me.lblFileName.Text = "Log File: (none)"
+        '
+        'ContextMenuStrip1
+        '
+        Me.ContextMenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CopyPathToClipboardToolStripMenuItem})
+        Me.ContextMenuStrip1.Name = "ContextMenuStrip1"
+        Me.ContextMenuStrip1.Size = New System.Drawing.Size(199, 48)
+        '
+        'CopyPathToClipboardToolStripMenuItem
+        '
+        Me.CopyPathToClipboardToolStripMenuItem.Name = "CopyPathToClipboardToolStripMenuItem"
+        Me.CopyPathToClipboardToolStripMenuItem.Size = New System.Drawing.Size(198, 22)
+        Me.CopyPathToClipboardToolStripMenuItem.Text = "Copy File Path to Clipboard"
+        Me.CopyPathToClipboardToolStripMenuItem.Visible = False
         '
         'chkAssociate
         '
@@ -343,6 +360,7 @@ Partial Class Form1
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.SplitContainer1.ResumeLayout(False)
         Me.TableLayoutPanel2.ResumeLayout(False)
+        Me.ContextMenuStrip1.ResumeLayout(False)
         Me.StatusStrip1.ResumeLayout(False)
         Me.StatusStrip1.PerformLayout()
         Me.TableLayoutPanel1.ResumeLayout(False)
@@ -379,4 +397,6 @@ Partial Class Form1
     Friend WithEvents btnRawView As Button
     Friend WithEvents lblLogFileType As ToolStripStatusLabel
     Friend WithEvents lblFileSize As ToolStripStatusLabel
+    Friend WithEvents ContextMenuStrip1 As ContextMenuStrip
+    Friend WithEvents CopyPathToClipboardToolStripMenuItem As ToolStripMenuItem
 End Class

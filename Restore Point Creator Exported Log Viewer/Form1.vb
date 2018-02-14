@@ -94,6 +94,7 @@ Public Class Form1
     End Function
 
     Sub openFile(strFileName As String)
+        CopyPathToClipboardToolStripMenuItem.Visible = True
         lblFileName.Text = "Log File: " & strFileName
         strLoadedFile = strFileName
 
@@ -630,6 +631,14 @@ Public Class Form1
     Private Sub chkProgramClosingAndOpeningEvents_Click(sender As Object, e As EventArgs) Handles chkProgramClosingAndOpeningEvents.Click
         My.Settings.boolIncludeOpeningAndClosingEvents = chkProgramClosingAndOpeningEvents.Checked
         If boolFileLoaded Then openFile(strLoadedFile)
+    End Sub
+
+    Private Sub CopyPathToClipboardToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CopyPathToClipboardToolStripMenuItem.Click
+        Try
+            Clipboard.SetDataObject(strLoadedFile, True, 5, 200)
+        Catch ex As Exception
+            MsgBox("Unable to open Windows Clipboard to copy text to it.", MsgBoxStyle.Critical, Me.Text)
+        End Try
     End Sub
 
     Private Sub Form1_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
