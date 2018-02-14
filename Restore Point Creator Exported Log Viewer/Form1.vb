@@ -134,7 +134,12 @@ Public Class Form1
                         End If
                     Else
                         logEntry = jsonEngine.Deserialize(strLineInFile, GetType(restorePointCreatorExportedLog))
-                        eventLogContents.Add(processLogEntry(logEntry, dateType))
+
+                        If Not chkProgramClosingAndOpeningEvents.Checked AndAlso (logEntry.logData.Contains("started the program") Or logEntry.logData.Contains("closed the program")) Then
+                            Continue While
+                        Else
+                            eventLogContents.Add(processLogEntry(logEntry, dateType))
+                        End If
                     End If
 
                     strLineInFile = fileHandle.ReadLine
@@ -182,7 +187,11 @@ Public Class Form1
             End If
 
             For Each logEntry As restorePointCreatorExportedLog In exportedLogFile.logsEntries
-                eventLogContents.Add(processLogEntry(logEntry, dateType))
+                If Not chkProgramClosingAndOpeningEvents.Checked AndAlso (logEntry.logData.Contains("started the program") Or logEntry.logData.Contains("closed the program")) Then
+                    Continue For
+                Else
+                    eventLogContents.Add(processLogEntry(logEntry, dateType))
+                End If
             Next
         ElseIf fileInfo.Extension.Equals(".log", StringComparison.OrdinalIgnoreCase) Then
             lblProgramVersion.Visible = False
@@ -199,7 +208,11 @@ Public Class Form1
 
             shortExportDataVersion = 5
             For Each logEntry As restorePointCreatorExportedLog In restorePointCreatorExportedLogObject
-                eventLogContents.Add(processLogEntry(logEntry, dateType))
+                If Not chkProgramClosingAndOpeningEvents.Checked AndAlso (logEntry.logData.Contains("started the program") Or logEntry.logData.Contains("closed the program")) Then
+                    Continue For
+                Else
+                    eventLogContents.Add(processLogEntry(logEntry, dateType))
+                End If
             Next
         End If
 
