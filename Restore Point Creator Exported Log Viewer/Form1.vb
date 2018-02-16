@@ -230,7 +230,7 @@ Public Class Form1
         timeStamp.Stop()
         lblProcessed.Text = String.Format("Loaded in {0}ms.", timeStamp.ElapsedMilliseconds)
 
-        btnClear.Enabled = True
+        btnClear.Enabled = False
         btnSearch.Enabled = True
         eventLogList.Enabled = True
 
@@ -540,6 +540,7 @@ Public Class Form1
             Next
 
             If eventLogList.Items.Count <> 0 Then
+                btnClear.Enabled = True
                 eventLogList.Sort()
                 Dim strEntriesFound As String = If(eventLogList.Items.Count = 1, "1 log entry was found.", eventLogList.Items.Count.ToString & " log entries were found.")
                 MsgBox("Search complete. " & strEntriesFound, MsgBoxStyle.Information, Me.Text)
@@ -588,6 +589,8 @@ Public Class Form1
             .Items.AddRange(eventLogContents.ToArray())
             .Sort()
         End With
+
+        btnClear.Enabled = False
     End Sub
 
     Private Sub chkAssociate_Click(sender As Object, e As EventArgs) Handles chkAssociate.Click
