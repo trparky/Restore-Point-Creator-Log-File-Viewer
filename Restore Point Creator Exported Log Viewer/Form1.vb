@@ -541,7 +541,7 @@ Public Class Form1
 
             If eventLogList.Items.Count <> 0 Then
                 eventLogList.Sort()
-                Dim strEntriesFound As String = If(eventLogList.Items.Count, "1 log entry was found.", eventLogList.Items.Count.ToString & " log entries were found.")
+                Dim strEntriesFound As String = If(eventLogList.Items.Count = 1, "1 log entry was found.", eventLogList.Items.Count.ToString & " log entries were found.")
                 MsgBox("Search complete. " & strEntriesFound, MsgBoxStyle.Information, Me.Text)
             Else
                 MsgBox("Search complete. No results found.", MsgBoxStyle.Information, Me.Text)
