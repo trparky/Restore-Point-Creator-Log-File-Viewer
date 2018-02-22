@@ -53,6 +53,7 @@ Partial Class Form1
         Me.chkProgramClosingAndOpeningEvents = New System.Windows.Forms.CheckBox()
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
         Me.btnRawView = New System.Windows.Forms.Button()
+        Me.chkConvertTimes = New System.Windows.Forms.CheckBox()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
         Me.SplitContainer1.Panel2.SuspendLayout()
@@ -339,11 +340,23 @@ Partial Class Form1
         Me.btnRawView.Text = "Raw View"
         Me.btnRawView.UseVisualStyleBackColor = True
         '
+        'chkConvertTimes
+        '
+        Me.chkConvertTimes.AutoSize = True
+        Me.chkConvertTimes.Location = New System.Drawing.Point(238, 44)
+        Me.chkConvertTimes.Name = "chkConvertTimes"
+        Me.chkConvertTimes.Size = New System.Drawing.Size(161, 17)
+        Me.chkConvertTimes.TabIndex = 12
+        Me.chkConvertTimes.Text = "Convert Times to Local Time"
+        Me.chkConvertTimes.UseVisualStyleBackColor = True
+        Me.chkConvertTimes.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(854, 424)
+        Me.Controls.Add(Me.chkConvertTimes)
         Me.Controls.Add(Me.TableLayoutPanel1)
         Me.Controls.Add(Me.chkProgramClosingAndOpeningEvents)
         Me.Controls.Add(Me.StatusStrip1)
@@ -399,4 +412,5 @@ Partial Class Form1
     Friend WithEvents lblFileSize As ToolStripStatusLabel
     Friend WithEvents ContextMenuStrip1 As ContextMenuStrip
     Friend WithEvents CopyPathToClipboardToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents chkConvertTimes As CheckBox
 End Class

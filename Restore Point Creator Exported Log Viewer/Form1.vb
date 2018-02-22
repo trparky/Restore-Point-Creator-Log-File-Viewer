@@ -70,16 +70,16 @@ Public Class Form1
                 dateType = storedDateType.unixTimestamp
 
                 entryDate = UNIXTimestampToDate(logEntry.unixTime)
-                listViewItemObject.SubItems.Add(entryDate.ToLocalTime.ToString)
+                listViewItemObject.SubItems.Add(If(chkConvertTimes.Checked, entryDate.ToLocalTime.ToString, entryDate.ToString))
             End If
         ElseIf shortExportDataVersion = 3 Or shortExportDataVersion = 4 Then
             dateType = storedDateType.unixTimestamp
 
             entryDate = UNIXTimestampToDate(logEntry.unixTime)
-            listViewItemObject.SubItems.Add(entryDate.ToLocalTime.ToString)
+            listViewItemObject.SubItems.Add(If(chkConvertTimes.Checked, entryDate.ToLocalTime.ToString, entryDate.ToString))
         ElseIf shortExportDataVersion = 5 Then
             dateType = storedDateType.mixed
-            entryDate = If(logEntry.unixTime = 0, logEntry.dateObject.ToLocalTime, UNIXTimestampToDate(logEntry.unixTime))
+            entryDate = If(logEntry.unixTime = 0, If(chkConvertTimes.Checked, logEntry.dateObject.ToLocalTime, logEntry.dateObject), UNIXTimestampToDate(logEntry.unixTime))
             listViewItemObject.SubItems.Add(entryDate.ToString)
         End If
 
@@ -93,7 +93,7 @@ Public Class Form1
         Return listViewItemObject
     End Function
 
-    Sub openFile(strFileName As String)
+    Sub openFile(strFileName As String, boolShowMessageBox As Boolean)
         CopyPathToClipboardToolStripMenuItem.Visible = True
         lblFileName.Text = "Log File: " & strFileName
         strLoadedFile = strFileName
@@ -234,7 +234,7 @@ Public Class Form1
         btnSearch.Enabled = True
         eventLogList.Enabled = True
 
-        MsgBox("Event Log Entry File Import Complete.", MsgBoxStyle.Information, Me.Text)
+        If boolShowMessageBox Then MsgBox("Event Log Entry File Import Complete.", MsgBoxStyle.Information, Me.Text)
     End Sub
 
     Private Function isTheLogSourceColumnInTheList() As Boolean
@@ -251,7 +251,7 @@ Public Class Form1
 
             btnRawView.Enabled = True
             exportedLogFile = Nothing
-            openFile(OpenFileDialog1.FileName)
+            openFile(OpenFileDialog1.FileName, True)
         End If
     End Sub
 
@@ -300,6 +300,7 @@ Public Class Form1
 
         Me.Size = My.Settings.windowSize
         Me.WindowState = My.Settings.windowState
+        chkConvertTimes.Checked = My.Settings.boolConvertTimes
 
         applySavedSorting()
 
@@ -609,7 +610,7 @@ Public Class Form1
 
             If IO.File.Exists(strPassedCommandLine) And (strPassedCommandLine.EndsWith(".reslog", StringComparison.OrdinalIgnoreCase) Or strPassedCommandLine.EndsWith(".reslogx", StringComparison.OrdinalIgnoreCase)) Then
                 btnRawView.Enabled = True
-                openFile(strPassedCommandLine)
+                openFile(strPassedCommandLine, True)
             End If
         End If
     End Sub
@@ -633,7 +634,7 @@ Public Class Form1
 
     Private Sub chkProgramClosingAndOpeningEvents_Click(sender As Object, e As EventArgs) Handles chkProgramClosingAndOpeningEvents.Click
         My.Settings.boolIncludeOpeningAndClosingEvents = chkProgramClosingAndOpeningEvents.Checked
-        If boolFileLoaded Then openFile(strLoadedFile)
+        If boolFileLoaded Then openFile(strLoadedFile, False)
     End Sub
 
     Private Sub CopyPathToClipboardToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CopyPathToClipboardToolStripMenuItem.Click
@@ -647,5 +648,10 @@ Public Class Form1
     Private Sub Form1_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
         My.Settings.windowSize = Me.Size
         My.Settings.windowState = Me.WindowState
+    End Sub
+
+    Private Sub chkConvertTimes_Click(sender As Object, e As EventArgs) Handles chkConvertTimes.Click
+        My.Settings.boolConvertTimes = chkConvertTimes.Checked
+        If boolFileLoaded Then openFile(strLoadedFile, False)
     End Sub
 End Class
