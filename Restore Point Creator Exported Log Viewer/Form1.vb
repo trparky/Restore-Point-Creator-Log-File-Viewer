@@ -84,7 +84,7 @@ Public Class Form1
         End If
 
         With listViewItemObject
-            .SubItems.Add(formatNumber(logEntry.logID))
+            .SubItems.Add(logEntry.logID.ToString)
             .SubItems.Add(If(logEntry.boolException, "Yes", "No"))
             .SubItems.Add(logEntry.logSource)
             .SubItems.Add("")
@@ -254,11 +254,6 @@ Public Class Form1
             openFile(OpenFileDialog1.FileName, True)
         End If
     End Sub
-
-    Public Function formatNumber(strInput As String) As String
-        Dim longInput As Long
-        Return If(Long.TryParse(strInput, longInput), longInput.ToString("n0", Globalization.CultureInfo.InvariantCulture), strInput)
-    End Function
 
     Private Function UNIXTimestampToDate(ByVal strUnixTime As ULong) As Date
         Return DateAdd(DateInterval.Second, strUnixTime, New DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)).ToLocalTime
