@@ -195,6 +195,8 @@ Public Class Form1
                 End If
             Next
         ElseIf fileInfo.Extension.Equals(".log", StringComparison.OrdinalIgnoreCase) Then
+            If isTheLogSourceColumnInTheList() Then eventLogList.Columns.Remove(colLogSource)
+
             lblProgramVersion.Visible = False
             lblOSVersion.Visible = False
             lblLogFileType.Visible = False
