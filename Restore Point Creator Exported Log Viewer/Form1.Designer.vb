@@ -179,6 +179,7 @@ Partial Class Form1
         '
         Me.colException.Text = "Exception"
         Me.colException.Width = 60
+        Me.colException.TextAlign = HorizontalAlignment.Center
         '
         'imageList
         '
